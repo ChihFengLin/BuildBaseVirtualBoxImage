@@ -1,0 +1,85 @@
+{
+  "variables": {
+    "rhsm_username": "{{env `RHSM_USERNAME`}}",
+    "rhsm_password": "{{env `RHSM_PASSWORD`}}",
+    "bake_ssh_user": "vagrant",
+    "bake_ssh_pass": "vagrant",
+    "vm_name": "base-rhel-7.4-vbox",
+    "cpus" : "2",
+    "memory" : "2048",
+    "disk_size" : "40960",
+    "iso_url": "iso/rhel-server-7.4-x86_64-dvd.iso",
+    "iso_sha256": "431a58c8c0351803a608ffa56948c5a7861876f78ccbe784724dd8c987ff7000"
+  },
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "RedHat_64",
+    "vm_name": "{{user `vm_name`}}",
+    "headless": true,
+    "disk_size": "{{user `disk_size`}}",
+    "iso_checksum_type": "sha256",
+    "iso_url": "{{user `iso_url`}}",
+    "iso_checksum": "{{user `iso_sha256`}}",
+    "ssh_wait_timeout": "20m",
+    "ssh_username": "{{user `bake_ssh_user`}}",
+    "ssh_password": "{{user `bake_ssh_pass`}}",
+    "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+    "output_directory": "boxes/disks",
+    "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+        ["modifyvm", "{{.Name}}", "--ioapic", "on"],
+        ["modifyvm", "{{.Name}}", "--pae", "on"],
+        ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
+        ["modifyvm", "{{.Name}}", "--bioslogodisplaytime", "1"]
+    ],
+    "http_directory": "boot",
+    "boot_wait": "5s",
+    "boot_command": [
+      "<esc><wait>",
+      "vmlinuz initrd=initrd.img net.ifnames=0 biosdevname=0 ",
+      "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/vbox-kickstart.cfg",
+      "<enter>"
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+      "inline": [
+        "subscription-manager register --auto-attach --username={{ user `rhsm_username` }} --password=\"{{ user `rhsm_password` }}\""
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+      "inline": [
+        "subscription-manager repos --enable=rhel-7-server-rpms",
+        "subscription-manager repos --enable=rhel-7-server-extras-rpms",
+        "subscription-manager repos --enable=rhel-7-server-optional-rpms",
+        "subscription-manager repos --enable=rhel-server-rhscl-7-rpms"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+      "inline": [
+        "mount /home/vagrant/VBoxGuestAdditions.iso /mnt",
+        "sh /mnt/VBoxLinuxAdditions.run",
+        "umount /mnt"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+      "inline": [
+        "yum -y update"
+      ]
+    }
+  ],
+  "post-processors": [{
+    "type": "vagrant",
+    "output": "boxes/{{user `vm_name`}}.box",
+    "keep_input_artifact": true
+  }]
+}
