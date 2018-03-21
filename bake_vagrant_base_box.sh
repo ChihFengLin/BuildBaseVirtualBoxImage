@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if env set with RHSM credentials
-[[ -z "$RHSM_USERNAME" ]] && logts "RHSM_USERNAME not set"
-[[ -z "$RHSM_PASSWORD" ]] && logts "RHSM_PASSWORD not set"
+[[ -z "$RHSM_USERNAME" ]] && echo "RHSM_USERNAME not set"
+[[ -z "$RHSM_PASSWORD" ]] && echo "RHSM_PASSWORD not set"
 
 
 ###############################################################

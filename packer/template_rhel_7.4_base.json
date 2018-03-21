@@ -64,15 +64,6 @@
       "type": "shell",
       "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
       "inline": [
-        "mount /home/vagrant/VBoxGuestAdditions.iso /mnt",
-        "sh /mnt/VBoxLinuxAdditions.run",
-        "umount /mnt"
-      ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
-      "inline": [
         "yum -y update"
       ]
     }
