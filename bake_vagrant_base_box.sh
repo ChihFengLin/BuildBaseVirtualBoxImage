@@ -55,7 +55,7 @@ fi
 
 #################################################################
 logInfo "Baking ${IMG} Image ..."
-${PACKER_CMD} build -force packer/${PACKER_TEMPLATE}
+${PACKER_CMD} build -force -on-error=ask packer/${PACKER_TEMPLATE}
 if [ $? -ne 0 ]
 then
   logErr "Error baking image"
