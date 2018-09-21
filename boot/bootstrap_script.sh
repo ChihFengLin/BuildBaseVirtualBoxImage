@@ -5,6 +5,9 @@ sudo yum -y update
 sudo yum -y install epel-release || sudo yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum -y install gcc gcc-c++ python-virtualenv python-pip python-devel libffi-devel openssl-devel libyaml-devel sshpass git vim-enhanced
 
+sudo mount /home/vagrant/VBoxGuestAdditions.iso /mnt
+sudo sh /mnt/VBoxLinuxAdditions.run
+sudo umount /mnt
 
 pip install setuptools --upgrade
 pip install --upgrade pip
