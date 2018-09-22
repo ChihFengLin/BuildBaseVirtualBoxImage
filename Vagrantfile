@@ -19,25 +19,25 @@ Vagrant.configure("2") do |config|
   config.ssh.password   = 'vagrant'
 
   # define vip_mgmnt box
-  config.vm.define "vip_mgmnt" do |vip_mgmnt|
-    vip_mgmnt.vm.hostname = "vip-mgmnt"
-    vip_mgmnt.vm.box = BOX_NAME
-    vip_mgmnt.vm.synced_folder '.', '/vagrant', disabled: true
+  #config.vm.define "vip_mgmnt" do |vip_mgmnt|
+  #  vip_mgmnt.vm.hostname = "vip-mgmnt"
+  #  vip_mgmnt.vm.box = BOX_NAME
+  #  vip_mgmnt.vm.synced_folder '.', '/vagrant', disabled: true
     #vip_mgmnt.vm.synced_folder '../ansible', '/deploy', disabled: false
-    vip_mgmnt.vm.network "private_network", ip: "#{MGMNT_IP}"
-    vip_mgmnt.vm.provider "virtualbox" do |v|
-      v.name = "vip_mgmnt"
-      v.cpus = 1
-      v.memory = 2048
-    end
+  #  vip_mgmnt.vm.network "private_network", ip: "#{MGMNT_IP}"
+  #  vip_mgmnt.vm.provider "virtualbox" do |v|
+  #    v.name = "vip_mgmnt"
+  #    v.cpus = 1
+  #    v.memory = 2048
+  #  end
     # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
-    vip_mgmnt.vm.provision :file do |file|
-      file.source      = PRIVATE_KEY_SOURCE
-      file.destination = PRIVATE_KEY_DESTINATION
-    end
-    vip_mgmnt.vm.provision "shell", path: "boot/bootstrap-vip_common.sh", args: "#{MGMNT_IP} #{NUM_WORKERS}"
-    vip_mgmnt.vm.provision "shell", path: "boot/bootstrap-vip_mgmnt.sh"
-  end
+  #  vip_mgmnt.vm.provision :file do |file|
+  #    file.source      = PRIVATE_KEY_SOURCE
+  #    file.destination = PRIVATE_KEY_DESTINATION
+  #  end
+  #  vip_mgmnt.vm.provision "shell", path: "boot/bootstrap-vip_common.sh", args: "#{MGMNT_IP} #{NUM_WORKERS}"
+  #  vip_mgmnt.vm.provision "shell", path: "boot/bootstrap-vip_mgmnt.sh"
+  #end
 
   # define vip_master box
   config.vm.define "vip_master" do |vip_master|
@@ -48,13 +48,14 @@ Vagrant.configure("2") do |config|
     vip_master.vm.provider "virtualbox" do |v|
       v.name = "vip_master"
       v.cpus = 1
-      v.memory = 4096
+      v.memory = 5120
     end
     vip_master.vm.provision :file do |file|
       file.source      = PRIVATE_KEY_SOURCE
       file.destination = PRIVATE_KEY_DESTINATION
     end
     vip_master.vm.provision "shell", path: "boot/bootstrap-vip_common.sh", args: "#{MGMNT_IP} #{NUM_WORKERS}"
+    vip_master.vm.provision "shell", path: "boot/bootstrap-vip_mgmnt.sh"
   end
 
   ip_addr = MASTER_IP_ADDR
