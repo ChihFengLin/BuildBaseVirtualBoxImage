@@ -39,18 +39,4 @@ sudo yum install -y java-1.8.0-openjdk-devel
 sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /etc/profile
 sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /root/.bashrc
 
-# Enable Newer SSL Certification
-#sudo cp $ssl_cert_file /etc/pki/ca-trust/source/anchors/TDSha2InternalBrowsing.cer
-#sudo update-ca-trust enable
-#sudo update-ca-trust extract
-#
-#sudo cat << EOF > /etc/pip.conf
-#[global] 
-#index-url = https://pypi.python.org/simple/ 
-#trusted-host = pypi.python.org   
-#
-#[install] 
-#index-url = https://pypi.python.org/simple/ 
-#trusted-host = pypi.python.org 
-#cert = /etc/ssl/certs/ca-bundle.trust.crt
-#EOF
+

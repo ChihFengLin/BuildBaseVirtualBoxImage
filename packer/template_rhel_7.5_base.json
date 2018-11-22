@@ -4,12 +4,12 @@
     "rhsm_password": "{{env `RHSM_PASSWORD`}}",
     "bake_ssh_user": "vagrant",
     "bake_ssh_pass": "vagrant",
-    "vm_name": "base-rhel-7.4-vbox",
+    "vm_name": "base-rhel-7.5-vbox",
     "cpus" : "2",
     "memory" : "2048",
     "disk_size" : "40960",
-    "iso_url": "iso/rhel-server-7.4-x86_64-dvd.iso",
-    "iso_sha256": "431a58c8c0351803a608ffa56948c5a7861876f78ccbe784724dd8c987ff7000"
+    "iso_url": "iso/rhel-server-7.5-x86_64-dvd.iso",
+    "iso_sha256": "d0dd6ae5e001fb050dafefdfd871e7e648b147fb2d35f0e106e0b34a0163e8f5"
   },
   "builders": [{
     "type": "virtualbox-iso",
@@ -65,6 +65,15 @@
       "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
       "inline": [
         "yum -y update"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+      "inline": [
+        "mount /home/vagrant/VBoxGuestAdditions.iso /mnt",
+        "sh /mnt/VBoxLinuxAdditions.run",
+        "umount /mnt"
       ]
     }
   ],

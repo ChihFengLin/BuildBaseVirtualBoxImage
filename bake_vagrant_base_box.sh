@@ -29,9 +29,9 @@ NC='\033[0m'
 #######################
 
 # Potentially args to script ?
-IMG="rhel_7.4_base"
+IMG="rhel_7.5_base"
 VM_TYPE="virtualbox"
-BOX_NAME="base-rhel-7.4-vbox"
+BOX_NAME="base-rhel-7.5-vbox"
 
 PACKER_TEMPLATE="template_${IMG}.json"
 
