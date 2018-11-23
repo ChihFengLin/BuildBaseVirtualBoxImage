@@ -39,4 +39,10 @@ sudo yum install -y java-1.8.0-openjdk-devel
 sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /etc/profile
 sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /root/.bashrc
 
+# Install Salt Minion
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm 
+sudo yum -y install salt-minion
 
+sed -i "16s/^/master: $mgmnt_ip\n/" /etc/salt/minion
+sudo systemctl enable salt-minion.service
+sudo systemctl start salt-minion.service

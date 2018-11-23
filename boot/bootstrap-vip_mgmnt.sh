@@ -8,6 +8,16 @@ sudo yum -y install gcc gcc-c++ python-virtualenv python-pip python-devel libffi
 
 virtualenv ~/ansible; source ~/ansible/bin/activate
 
-pip install --trusted-host files.pythonhosted.org setuptools --upgrade
-pip install --trusted-host files.pythonhosted.org pip --upgrade
-pip install --trusted-host files.pythonhosted.org pycparser functools32 pytz ansible==2.3.2
+# Install Ansible
+pip install setuptools --upgrade
+pip install pip --upgrade
+pip install pycparser functools32 pytz ansible==2.3.2
+
+# Install Salt Master and Configure
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
+sudo yum -y install salt-master
+sudo systemctl enable salt-master.service
+sudo systemctl start salt-master.service
+
+sleep 30
+sudo salt-key -A -y

@@ -22,7 +22,7 @@ Options:
   -w | --num_workers
   No.of workers (eg: "2")
   -b | --vagrant_box
-  Base box name for Vagrant (eg: "base-rhel-7.4-vbox")
+  Base box name for Vagrant (eg: "base-rhel-7.5-vbox")
 
 EOF
 exit 0
