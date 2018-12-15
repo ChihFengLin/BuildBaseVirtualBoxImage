@@ -47,15 +47,27 @@ while [ "$1" ]; do
    p_unknown "missing argument, see $SCRIPT_NAME -h for help"
    fi
    ;;
+   -b|--multi_master)
+   if [ -n "$2" ] ; then
+   is_multi_master="$2"
+   shift 2
+   else
+   p_unknown "missing argument, see $SCRIPT_NAME -h for help"
+   fi
+   ;;
    *)  p_unknown "Internal error";;
   esac
 done
 
-if [ -z "$num_workers" ] || [ -z "$base_vagrant_box_name" ]; then
+if [ -z "$num_workers" ] || [ -z "$base_vagrant_box_name" ] || [ -z "$is_multi_master" ]; then
   p_unknown "Unknown/invalid argument, see $SCRIPT_NAME -h for help"
 fi
 
 export num_workers=$num_workers
 export box_name=$base_vagrant_box_name
 
-vagrant up
+if [ "$is_multi_master" = true ]; then
+  VAGRANT_VAGRANTFILE=Vagrantfile.multi_master vagrant up
+else
+  VAGRANT_VAGRANTFILE=Vagrantfile vagrant up
+fi
