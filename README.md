@@ -27,6 +27,6 @@
 
  1. Launch multi-node VM cluster (1 management node, 1 master and n workers - starting with ip 192.168.100.2 (/24 CIDR))
  ```
- $ ./launch_local_cluster.sh --num_workers 1 --vagrant_box "base-rhel-7.5-vbox"
+ $ ./launch_local_cluster.sh --num_workers 1 --vagrant_box "base-rhel-7.5-vbox" --multi_master false
  ```
  - Ansible and Salt included in management node
