@@ -9,8 +9,10 @@ MGMNT_IP_ADDR             = IPAddr.new("192.168.100.2")
 MGMNT_IP                  = MGMNT_IP_ADDR.to_string
 NUM_WORKERS               = ENV['num_workers']
 BOX_NAME                  = ENV['box_name']
-MASTER_IP_ADDR            = MGMNT_IP_ADDR.succ
-MASTER_IP                 = MASTER_IP_ADDR.to_string
+MASTER_01_IP_ADDR         = MGMNT_IP_ADDR.succ
+MASTER_01_IP              = MASTER_01_IP_ADDR.to_string
+MASTER_02_IP_ADDR         = MASTER_01_IP_ADDR.succ
+MASTER_02_IP              = MASTER_02_IP_ADDR.to_string
 
 Vagrant.configure("2") do |config|
 
@@ -23,7 +25,7 @@ Vagrant.configure("2") do |config|
     vip_master_01.vm.hostname = "vip-master-01"
     vip_master_01.vm.box = BOX_NAME
     vip_master_01.vm.synced_folder '.', '/vagrant', disabled: true
-    vip_master_01.vm.network "private_network", ip: "#{MASTER_IP}"
+    vip_master_01.vm.network "private_network", ip: "#{MASTER_01_IP}"
     vip_master_01.vm.provider "virtualbox" do |v|
       v.name = "vip_master_01"
       v.cpus = 1
@@ -40,7 +42,7 @@ Vagrant.configure("2") do |config|
     vip_master_02.vm.hostname = "vip-master-02"
     vip_master_02.vm.box = BOX_NAME
     vip_master_02.vm.synced_folder '.', '/vagrant', disabled: true
-    vip_master_02.vm.network "private_network", ip: "#{MASTER_IP}"
+    vip_master_02.vm.network "private_network", ip: "#{MASTER_02_IP}"
     vip_master_02.vm.provider "virtualbox" do |v|
       v.name = "vip_master_02"
       v.cpus = 1
@@ -53,7 +55,7 @@ Vagrant.configure("2") do |config|
     vip_master_02.vm.provision "shell", path: "boot/bootstrap-multi_common.sh", args: "#{MGMNT_IP} #{NUM_WORKERS}"
   end
 
-  ip_addr = MASTER_IP_ADDR
+  ip_addr = MASTER_02_IP_ADDR
   NUM_WORKERS.to_i.times do |i|
     # define vip_worker box
     config.vm.define "vip_worker#{i}" do |vip_worker|
