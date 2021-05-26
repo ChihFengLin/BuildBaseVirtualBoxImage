@@ -1,5 +1,11 @@
 #!/bin/bash
 
+chmod 600 /home/vagrant/.ssh/id_rsa
+
+sudo yum -y update
+sudo yum -y install epel-release || sudo yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum -y install gcc gcc-c++ python-virtualenv python-pip python-devel libffi-devel openssl-devel libyaml-devel sshpass git vim-enhanced libtirpc-devel
+
 # not quite full proof:
 #  - does not avoid network,router and broadcast
 #  - does not recognize subnet boundaries with CIDR mask
@@ -40,7 +46,7 @@ sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /etc/profile
 sudo echo "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk" >> /root/.bashrc
 
 # Install Salt Minion
-sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm 
+sudo yum -y install https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
 sudo yum -y install salt-minion
 
 sed -i "16s/^/master: $mgmnt_ip\n/" /etc/salt/minion
