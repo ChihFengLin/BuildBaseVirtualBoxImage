@@ -67,7 +67,7 @@ export num_workers=$num_workers
 export box_name=$base_vagrant_box_name
 
 if [ "$is_multi_master" = true ]; then
-  VAGRANT_VAGRANTFILE=Vagrantfile.multi_master vagrant up
+  num_workers=$num_workers box_name=$base_vagrant_box_name VAGRANT_VAGRANTFILE=Vagrantfile.multi_master vagrant up
 else
-  VAGRANT_VAGRANTFILE=Vagrantfile vagrant up
+  num_workers=$num_workers box_name=$base_vagrant_box_name VAGRANT_VAGRANTFILE=Vagrantfile vagrant up
 fi

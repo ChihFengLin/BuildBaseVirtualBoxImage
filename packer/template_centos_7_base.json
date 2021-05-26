@@ -1,0 +1,67 @@
+{
+
+    "variables": {
+        "bake_ssh_user": "vagrant",
+        "bake_ssh_pass": "vagrant",
+        "vm_name": "base-centos-7-vbox",
+        "cpus" : "2",
+        "memory" : "2048",
+        "disk_size" : "40960",
+        "iso_url": "iso/CentOS-7-x86_64-DVD-2009.iso",
+        "iso_sha256": "e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987"
+    },
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "RedHat_64",
+        "vm_name": "{{user `vm_name`}}",
+        "headless": true,
+        "disk_size": "{{user `disk_size`}}",
+        "iso_checksum_type": "sha256",
+        "iso_url": "{{user `iso_url`}}",
+        "iso_checksum": "{{user `iso_sha256`}}",
+        "ssh_wait_timeout": "20m",
+        "ssh_username": "{{user `bake_ssh_user`}}",
+        "ssh_password": "{{user `bake_ssh_pass`}}",
+        "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+        "output_directory": "boxes/disks",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--ioapic", "on"],
+            ["modifyvm", "{{.Name}}", "--pae", "on"],
+            ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"],
+            ["modifyvm", "{{.Name}}", "--bioslogodisplaytime", "1"]
+        ],
+        "http_directory": "boot",
+        "boot_wait": "5s",
+        "boot_command": [
+          "<esc><wait>",
+          "vmlinuz initrd=initrd.img net.ifnames=0 biosdevname=0 ",
+          "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/vbox-kickstart.cfg",
+          "<enter>"
+        ]
+    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+            "inline": [
+                "mount /home/vagrant/VBoxGuestAdditions.iso /mnt",
+                "sh /mnt/VBoxLinuxAdditions.run",
+                "umount /mnt"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `bake_ssh_pass`}}' | {{ .Vars }} sudo -E -S '{{ .Path }}'",
+            "inline": [
+                "yum -y update"
+            ]
+        }
+    ],
+    "post-processors": [{
+        "type": "vagrant",
+        "output": "boxes/{{user `vm_name`}}.box",
+        "keep_input_artifact": true
+    }]
+}

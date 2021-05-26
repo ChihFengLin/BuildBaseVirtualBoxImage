@@ -1,1 +1,5 @@
 .vagrant
+
+iso/*.iso
+boxes/*.box
+boxes/disks/*
