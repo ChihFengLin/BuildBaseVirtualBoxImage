@@ -6,6 +6,9 @@ sudo yum -y update
 sudo yum -y install epel-release || sudo yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum -y install gcc gcc-c++ python-virtualenv python-pip python-devel libffi-devel openssl-devel libyaml-devel sshpass git vim-enhanced libtirpc-devel
 
+# Install Python 3
+sudo yum -y install python3
+
 # not quite full proof:
 #  - does not avoid network,router and broadcast
 #  - does not recognize subnet boundaries with CIDR mask
